@@ -55,28 +55,28 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
 
   return (
     <div className={clsx(
-      'flex gap-3 mb-6',
+      'flex gap-4 mb-8',
       message.role === 'user' ? 'justify-end' : 'justify-start'
     )}>
       {message.role === 'assistant' && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
-          <Bot size={18} className="text-white" />
+        <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-teal-500 flex items-center justify-center shadow-lg">
+          <Bot size={20} className="text-white" />
         </div>
       )}
       
       <div className={clsx(
-        'max-w-4xl rounded-2xl px-4 py-3 relative',
+        'max-w-4xl rounded-3xl px-6 py-4 relative shadow-lg',
         // use `group` so hover styles inside the bubble can be triggered
         'group',
         message.role === 'user' 
-          ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white ml-12' 
-          : 'bg-gray-800 text-gray-100 mr-12',
+          ? 'bg-gradient-to-br from-blue-600 via-blue-600 to-purple-600 text-white ml-12 shadow-blue-500/20' 
+          : 'bg-slate-800/80 backdrop-blur-sm text-slate-100 mr-12 border border-slate-700/50',
         isLast && message.isStreaming && 'animate-pulse'
       )}>
         <div
           ref={contentRef}
           className={clsx(
-            'prose prose-invert max-w-none',
+            'prose prose-invert max-w-none leading-relaxed',
             message.role === 'user' ? 'whitespace-pre-wrap' : ''
           )}
           dangerouslySetInnerHTML={{ __html: processedContent }}
@@ -84,25 +84,25 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
         {/* Thinking indicator: show when assistant message is streaming but no tokens/output yet */}
         {message.role === 'assistant' && message.isStreaming && (!message.content || message.content.trim() === '') && (
           <div className="mt-2" aria-live="polite" aria-busy="true">
-            <span className="text-sm text-gray-300 italic">Thinking</span>
+            <span className="text-sm text-slate-300 italic font-medium">Thinking...</span>
             <span className="sr-only">Assistant is thinking</span>
           </div>
         )}
         
         {/* Hover controls placed at bottom-right of the bubble */}
         {(message.role === 'assistant' || message.role === 'user') && (
-          <div className="absolute -bottom-4 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex gap-2 pointer-events-auto">
+          <div className="absolute -bottom-5 right-3 z-10 opacity-0 group-hover:opacity-100 transition-all duration-200 flex gap-2 pointer-events-auto">
             {message.role === 'assistant' && (
               <button
                 title="Regenerate"
                 aria-label="Regenerate message"
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white shadow-lg ring-1 ring-slate-700/50 hover:ring-slate-600 transition-all duration-200 backdrop-blur-sm hover:scale-105"
                 onClick={() => {
                   const ev = new CustomEvent('regenerate-message', { detail: { messageId: message.id } });
                   window.dispatchEvent(ev);
                 }}
               >
-                <RefreshCw size={16} />
+                <RefreshCw size={18} />
               </button>
             )}
 
@@ -110,26 +110,26 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
               <button
                 title="Edit"
                 aria-label="Edit message"
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white shadow-lg ring-1 ring-slate-700/50 hover:ring-slate-600 transition-all duration-200 backdrop-blur-sm hover:scale-105"
                 onClick={() => {
                   const ev = new CustomEvent('edit-message', { detail: { messageId: message.id } });
                   window.dispatchEvent(ev);
                 }}
               >
-                <Edit size={16} />
+                <Edit size={18} />
               </button>
             )}
           </div>
         )}
         
         {isLast && message.isStreaming && (
-          <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-blue-500 rounded-full animate-bounce" />
+          <div className="absolute -bottom-3 -right-3 w-5 h-5 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full animate-bounce shadow-lg" />
         )}
       </div>
 
       {message.role === 'user' && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
-          <User size={18} className="text-white" />
+        <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center shadow-lg">
+          <User size={20} className="text-white" />
         </div>
       )}
     </div>
