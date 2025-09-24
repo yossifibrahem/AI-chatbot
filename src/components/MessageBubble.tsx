@@ -1,6 +1,6 @@
 // React import not required with new JSX transform
 import { useEffect, useRef } from 'react';
-import { User, Bot, Edit, RefreshCw } from 'lucide-react';
+import { User, MessageSquare, Edit, RefreshCw } from 'lucide-react';
 import { Message } from '../types';
 import { renderMarkdown, enhanceCodeBlocks } from '../utils/markdown';
 import { extractMathPlaceholders, injectMathPlaceholders } from '../utils/math';
@@ -59,18 +59,18 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
       message.role === 'user' ? 'justify-end' : 'justify-start'
     )}>
       {message.role === 'assistant' && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
-          <Bot size={18} className="text-white" />
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-600 dark:bg-amber-700 flex items-center justify-center shadow-sm">
+          <MessageSquare size={18} className="text-cream-50" />
         </div>
       )}
       
       <div className={clsx(
-        'max-w-4xl rounded-2xl px-4 py-3 relative',
+        'max-w-4xl rounded-2xl px-6 py-4 relative shadow-sm',
         // use `group` so hover styles inside the bubble can be triggered
         'group',
         message.role === 'user' 
-          ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white ml-12' 
-          : 'bg-gray-800 text-gray-100 mr-12',
+          ? 'bg-amber-600 dark:bg-amber-700 text-cream-50 ml-12 border border-amber-700 dark:border-amber-600' 
+          : 'bg-white dark:bg-stone-800 text-stone-800 dark:text-cream-100 mr-12 border border-amber-200 dark:border-amber-800',
         isLast && message.isStreaming && 'animate-pulse'
       )}>
         <div
@@ -83,20 +83,20 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
         />
         {/* Thinking indicator: show when assistant message is streaming but no tokens/output yet */}
         {message.role === 'assistant' && message.isStreaming && (!message.content || message.content.trim() === '') && (
-          <div className="mt-2" aria-live="polite" aria-busy="true">
-            <span className="text-sm text-gray-300 italic">Thinking</span>
+          <div className="mt-3" aria-live="polite" aria-busy="true">
+            <span className="text-sm text-amber-600 dark:text-amber-400 italic font-medium">Thinking</span>
             <span className="sr-only">Assistant is thinking</span>
           </div>
         )}
         
         {/* Hover controls placed at bottom-right of the bubble */}
         {(message.role === 'assistant' || message.role === 'user') && (
-          <div className="absolute -bottom-4 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex gap-2 pointer-events-auto">
+          <div className="absolute -bottom-4 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex gap-2 pointer-events-auto">
             {message.role === 'assistant' && (
               <button
                 title="Regenerate"
                 aria-label="Regenerate message"
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-amber-600/90 hover:bg-amber-700 text-cream-50 shadow-md ring-1 ring-transparent hover:ring-amber-400 transition-all duration-200"
                 onClick={() => {
                   const ev = new CustomEvent('regenerate-message', { detail: { messageId: message.id } });
                   window.dispatchEvent(ev);
@@ -110,7 +110,7 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
               <button
                 title="Edit"
                 aria-label="Edit message"
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-amber-600/90 hover:bg-amber-700 text-cream-50 shadow-md ring-1 ring-transparent hover:ring-amber-400 transition-all duration-200"
                 onClick={() => {
                   const ev = new CustomEvent('edit-message', { detail: { messageId: message.id } });
                   window.dispatchEvent(ev);
@@ -123,13 +123,13 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
         )}
         
         {isLast && message.isStreaming && (
-          <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-blue-500 rounded-full animate-bounce" />
+          <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-amber-500 rounded-full animate-bounce" />
         )}
       </div>
 
       {message.role === 'user' && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
-          <User size={18} className="text-white" />
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-stone-600 dark:bg-stone-700 flex items-center justify-center shadow-sm">
+          <User size={18} className="text-cream-50" />
         </div>
       )}
     </div>

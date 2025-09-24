@@ -8,9 +8,11 @@ import { ChatInput } from './components/ChatInput';
 import { EmptyState } from './components/EmptyState';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { streamChatCompletion, createChatCompletion } from './utils/api';
+import { useTheme } from './hooks/useTheme';
 import clsx from 'clsx';
 
 function App() {
+  useTheme(); // Initialize theme
   const [chatState, setChatState] = useLocalStorage<ChatState>('chat-state', {
     conversations: [],
     currentConversationId: null,
@@ -410,7 +412,7 @@ function App() {
   ];
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex">
+    <div className="h-screen bg-cream-50 dark:bg-stone-900 flex font-serif">
         <ConversationSidebar
           conversations={chatState.conversations}
           currentConversationId={chatState.currentConversationId}
