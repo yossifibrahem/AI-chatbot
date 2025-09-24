@@ -56,16 +56,16 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
   };
 
   return (
-    <div className="border-t border-gray-700 bg-gray-900/50 backdrop-blur-md p-4">
+    <div className="border-t border-amber-200 dark:border-amber-800 bg-white/80 dark:bg-stone-800/80 backdrop-blur-md p-6">
       <div className="max-w-4xl mx-auto">
         <div className="space-y-2">
           {editingMessageId && (
-            <div className="text-sm text-yellow-300 bg-yellow-900/20 px-3 py-1 rounded-md">
+            <div className="text-sm text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/30 px-4 py-2 rounded-lg border border-amber-200 dark:border-amber-700">
               Editing message — this will delete all messages after it and regenerate the assistant response when submitted.
             </div>
           )}
 
-          <div className="flex items-end gap-3 bg-gray-800 rounded-2xl border border-gray-600 p-3">
+          <div className="flex items-end gap-4 bg-cream-100 dark:bg-stone-700 rounded-2xl border border-amber-200 dark:border-amber-700 p-4 shadow-sm">
           <textarea
             ref={textareaRef}
             value={message}
@@ -74,14 +74,14 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
             placeholder="Type your message here..."
             rows={1}
             disabled={disabled}
-            className="flex-1 bg-transparent text-gray-100 placeholder-gray-400 resize-none border-none outline-none min-h-[32px] max-h-[200px]"
+            className="flex-1 bg-transparent text-stone-800 dark:text-cream-100 placeholder-amber-600 dark:placeholder-amber-400 resize-none border-none outline-none min-h-[32px] max-h-[200px] font-serif"
             style={{ height: '32px' }}
           />
           {/* If editing, show a Cancel button */}
           {editingMessageId && (
             <button
               onClick={() => onCancelEdit && onCancelEdit()}
-              className="mr-2 text-sm text-gray-300 hover:text-white"
+              className="mr-2 text-sm text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 font-medium"
             >
               Cancel
             </button>
@@ -90,16 +90,16 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
             onClick={isStreaming ? onStopGeneration : handleSubmit}
             disabled={(!message.trim() && !isStreaming) || disabled}
             className={clsx(
-              'flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200',
+              'flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 shadow-sm',
               isStreaming
-                ? 'bg-red-600 hover:bg-red-700 text-white'
+                ? 'bg-red-600 hover:bg-red-700 text-cream-50'
                 : message.trim()
-                ? 'bg-gradient-to-br from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white shadow-lg'
-                : 'bg-gray-700 text-gray-400 cursor-not-allowed',
+                ? 'bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-cream-50 shadow-md hover:shadow-lg'
+                : 'bg-amber-300 dark:bg-stone-600 text-amber-600 dark:text-stone-400 cursor-not-allowed',
               'disabled:opacity-50 disabled:cursor-not-allowed'
             )}
           >
-            {isStreaming ? <Square size={18} /> : <Send size={18} />}
+            {isStreaming ? <Square size={20} /> : <Send size={20} />}
           </button>
         </div>
         </div>
