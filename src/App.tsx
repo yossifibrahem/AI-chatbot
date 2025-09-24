@@ -112,15 +112,13 @@ function App() {
     }
   };
 
-  // Generate a short, context-aware conversation name using the assistant
-  const generateConversationName = async (conversationId: string) => {
-    const conv = chatState.conversations.find(c => c.id === conversationId);
-    if (!conv) return;
-    // If the name looks auto-generated from the user's first message, attempt to replace it
-    const looksAuto = /^.{1,40}/.test(conv.name);
-    if (!looksAuto) return;
+  // Generate a short, context-aware conversation name using the assistant.
+  const generateConversationName = async (conversationId: string, firstUserMessage?: string) => {
     try {
-      const prompt = `Provide a short (max 30 characters) chat title for a conversation whose first user message is:\n\n"${conv.messages[0]?.content || ''}"\n\nReturn only the title.`;
+      const firstMsg = firstUserMessage ?? chatState.conversations.find(c => c.id === conversationId)?.messages[0]?.content ?? '';
+      if (!firstMsg) return;
+
+      const prompt = `Provide a short (max 30 characters) chat title for a conversation whose first user message is:\n\n"${firstMsg}"\n\nReturn only the title.`;
       const title = await createChatCompletion([{ role: 'user', content: prompt }]);
       const cleaned = title.replace(/\n/g, ' ').trim().slice(0, 60);
       if (cleaned) {
@@ -175,11 +173,8 @@ function App() {
       currentConversationId: conversation.id
     }));
 
-    // Attempt to auto-generate a nicer conversation name (non-blocking)
-    if (conversation && conversation.messages.length === 0) {
-      // fire-and-forget
-      generateConversationName(conversation.id).catch(() => {});
-    }
+    // Remember how many messages were in the conversation before sending
+    const prevMessageCount = conversation.messages.length;
 
     try {
       // Use streaming API when available to show tokens live
@@ -195,6 +190,13 @@ function App() {
         ),
         isStreaming: false
       }));
+
+      // If this was the first assistant reply for the conversation (i.e. there
+      // were 0 messages before sending the user's message), generate a title.
+      if (prevMessageCount === 0) {
+        // run in background, use the original user message as source
+        generateConversationName(conversation.id, userMessage.content).catch(() => {});
+      }
     } catch (error) {
       // If the error was caused by an explicit user abort, don't fall back to the non-streaming API
       const isAbort = (error as any)?.name === 'AbortError' || (error as any)?.message?.toLowerCase().includes('abort');
@@ -227,6 +229,10 @@ function App() {
           ),
           isStreaming: false
         }));
+
+        if (prevMessageCount === 0) {
+          generateConversationName(conversation.id, userMessage.content).catch(() => {});
+        }
       } catch (e2) {
         console.error('Error sending message:', e2);
         setChatState(prev => ({ ...prev, isStreaming: false }));

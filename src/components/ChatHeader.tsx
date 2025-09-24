@@ -27,7 +27,7 @@ export function ChatHeader({ currentConversation, onToggleSidebar }: ChatHeaderP
               {currentConversation?.name || 'AI Assistant'}
             </h1>
             <p className="text-sm text-gray-400">
-              Powered by Claude Sonnet 4
+              Powered by GPT-OSS
             </p>
           </div>
         </div>
