@@ -1,10 +1,9 @@
 // React import not required with new JSX transform
 import { useEffect, useRef } from 'react';
-import { User, Bot } from 'lucide-react';
+import { User, Bot, Edit, RefreshCw } from 'lucide-react';
 import { Message } from '../types';
-import { renderMarkdown } from '../utils/markdown';
+import { renderMarkdown, enhanceCodeBlocks } from '../utils/markdown';
 import { renderMath } from '../utils/math';
-import { highlightCode } from '../utils/markdown';
 import clsx from 'clsx';
 
 interface MessageBubbleProps {
@@ -17,7 +16,8 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
 
   useEffect(() => {
     if (contentRef.current && message.role === 'assistant') {
-      highlightCode(contentRef.current);
+      // Highlight existing code blocks and enhance them with copy/header UI
+      enhanceCodeBlocks(contentRef.current);
     }
   }, [message.content]);
 
@@ -53,6 +53,8 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
       
       <div className={clsx(
         'max-w-4xl rounded-2xl px-4 py-3 relative',
+        // use `group` so hover styles inside the bubble can be triggered
+        'group',
         message.role === 'user' 
           ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white ml-12' 
           : 'bg-gray-800 text-gray-100 mr-12',
@@ -67,22 +69,36 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
           dangerouslySetInnerHTML={{ __html: processedContent }}
         />
         
-        {/* Small per-message controls for assistant messages (handled via custom events) */}
-        {message.role === 'assistant' && (
-          <div className="mt-2 flex gap-2">
-            <button className="text-sm text-gray-400 hover:text-gray-200" onClick={() => {
-              const ev = new CustomEvent('regenerate-message', { detail: { messageId: message.id } });
-              window.dispatchEvent(ev);
-            }}>Regenerate</button>
-          </div>
-        )}
+        {/* Hover controls placed at bottom-right of the bubble */}
+        {(message.role === 'assistant' || message.role === 'user') && (
+          <div className="absolute -bottom-4 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex gap-2 pointer-events-auto">
+            {message.role === 'assistant' && (
+              <button
+                title="Regenerate"
+                aria-label="Regenerate message"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
+                onClick={() => {
+                  const ev = new CustomEvent('regenerate-message', { detail: { messageId: message.id } });
+                  window.dispatchEvent(ev);
+                }}
+              >
+                <RefreshCw size={16} />
+              </button>
+            )}
 
-        {message.role === 'user' && (
-          <div className="mt-2 flex gap-2 justify-end">
-            <button className="text-sm text-gray-300 hover:text-white" onClick={() => {
-              const ev = new CustomEvent('edit-message', { detail: { messageId: message.id } });
-              window.dispatchEvent(ev);
-            }}>Edit</button>
+            {message.role === 'user' && (
+              <button
+                title="Edit"
+                aria-label="Edit message"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
+                onClick={() => {
+                  const ev = new CustomEvent('edit-message', { detail: { messageId: message.id } });
+                  window.dispatchEvent(ev);
+                }}
+              >
+                <Edit size={16} />
+              </button>
+            )}
           </div>
         )}
         

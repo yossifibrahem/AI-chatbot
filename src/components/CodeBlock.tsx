@@ -1,50 +1,51 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { highlightCode } from '../utils/markdown';
-import { useState } from 'react';
 
 interface CodeBlockProps {
   code: string;
-  language: string;
+  language?: string;
 }
 
-export function CodeBlock({ code, language }: CodeBlockProps) {
-  const codeRef = useRef<HTMLElement>(null);
+export function CodeBlock({ code, language = 'text' }: CodeBlockProps) {
+  const codeRef = useRef<HTMLElement | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (codeRef.current) {
-      highlightCode(codeRef.current.parentElement!);
+      // highlightCode expects the container (pre) element
+      const pre = codeRef.current.parentElement as HTMLElement | null;
+      if (pre) highlightCode(pre);
     }
-  }, [code]);
+  }, [code, language]);
 
-  const copyToClipboard = async () => {
+  const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy code:', err);
+      setTimeout(() => setCopied(false), 1800);
+    } catch (e) {
+      // ignore
     }
   };
 
   return (
-    <div className="code-block-container">
-      <div className="code-header">
-        <span className="code-language">{language}</span>
-        <button 
-          onClick={copyToClipboard}
-          className="copy-button"
-          title="Copy code"
+    <div className="code-block-wrapper my-4 rounded-lg overflow-hidden border border-gray-700 bg-gray-900">
+      <div className="code-block-header flex items-center justify-between px-3 py-1 text-xs text-gray-300 bg-gray-800 border-b border-gray-700">
+        <span className="font-mono lowercase">{language}</span>
+        <button
+          type="button"
+          onClick={handleCopy}
+          aria-label="Copy code"
+          className="flex items-center gap-2 text-gray-300 hover:text-white focus:outline-none"
         >
-          {copied ? <Check size={16} /> : <Copy size={16} />}
-          {copied ? 'Copied!' : 'Copy'}
+          {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+          <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
         </button>
       </div>
-      <pre className="code-content">
-        <code ref={codeRef} className={`language-${language}`}>
-          {code}
-        </code>
+
+      <pre className="m-0 p-4 overflow-auto max-h-64">
+        <code ref={codeRef} className={`language-${language} font-mono text-sm`}>{code}</code>
       </pre>
     </div>
   );

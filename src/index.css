@@ -35,30 +35,8 @@
   background: rgba(59, 130, 246, 0.8);
 }
 
-/* Code Block Styling */
-.code-block-container {
-  @apply my-4 rounded-lg overflow-hidden border border-gray-600;
-}
-
-.code-header {
-  @apply flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-600;
-}
-
-.code-language {
-  @apply text-sm font-mono text-gray-300;
-}
-
-.copy-button {
-  @apply flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white text-sm rounded border border-gray-600 transition-all duration-200;
-}
-
-.code-content {
-  @apply bg-gray-900 p-4 overflow-x-auto;
-}
-
-.code-content code {
-  @apply text-sm;
-}
+/* Legacy code block styles removed to allow simpler/uniform code rendering.
+   Prism theme import at the top still provides syntax colors if needed. */
 
 /* Prose Styling */
 .prose {
@@ -166,9 +144,7 @@
     @apply text-sm;
   }
   
-  .code-content {
-    @apply text-xs;
-  }
+  /* Removed responsive sizing for legacy code blocks */
 }
 
 /* Focus styles */
@@ -206,3 +182,21 @@
       .5em 0 0 white;
   }
 }
+
+/* Enhanced code block UI */
+
+/* Enhanced code block UI */
+.code-block-wrapper { box-shadow: 0 2px 8px rgba(2,6,23,0.6); }
+.code-block-wrapper .code-block-header svg { display: inline-block; vertical-align: middle; }
+.code-block-header button { background: transparent; border: none; cursor: pointer; }
+.code-block-header button:focus { outline: none; }
+.code-block-wrapper pre { background: transparent !important; }
+.code-block-wrapper code { background: transparent !important; border: none !important; padding: 0 !important; white-space: pre; color: inherit !important; }
+.code-block-wrapper::-webkit-scrollbar { height: 8px; }
+.code-block-wrapper pre { scrollbar-color: rgba(59,130,246,0.6) transparent; }
+
+/* If code blocks are inside .prose, the .prose code rule may apply; override it here */
+.prose .code-block-wrapper code { background: transparent !important; border: none !important; padding: 0 !important; }
+
+/* Make language label visually distinct */
+.code-block-header .font-mono { color: #cbd5e1; font-weight: 600; }
