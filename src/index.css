@@ -47,22 +47,22 @@
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(17, 24, 39, 0.5);
-  border-radius: 4px;
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(75, 85, 99, 0.8);
-  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.6);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(107, 114, 128, 1);
+  background: rgba(59, 130, 246, 0.8);
 }
 
 /* Legacy code block styles removed to allow simpler/uniform code rendering.
