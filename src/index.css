@@ -1,0 +1,208 @@
+@import 'prismjs/themes/prism-tomorrow.css';
+
+/* Prism.js Theme */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* KaTeX Styling */
+.katex {
+  font-size: 1.1em;
+}
+
+.katex-display {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.6);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+/* Code Block Styling */
+.code-block-container {
+  @apply my-4 rounded-lg overflow-hidden border border-gray-600;
+}
+
+.code-header {
+  @apply flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-600;
+}
+
+.code-language {
+  @apply text-sm font-mono text-gray-300;
+}
+
+.copy-button {
+  @apply flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white text-sm rounded border border-gray-600 transition-all duration-200;
+}
+
+.code-content {
+  @apply bg-gray-900 p-4 overflow-x-auto;
+}
+
+.code-content code {
+  @apply text-sm;
+}
+
+/* Prose Styling */
+.prose {
+  @apply text-gray-100;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  @apply text-gray-100 font-semibold mt-6 mb-4;
+}
+
+.prose h1 { @apply text-3xl; }
+.prose h2 { @apply text-2xl; }
+.prose h3 { @apply text-xl; }
+.prose h4 { @apply text-lg; }
+
+.prose p {
+  @apply mb-4 leading-relaxed;
+}
+
+.prose ul, .prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose ul li {
+  @apply list-disc;
+}
+
+.prose ol li {
+  @apply list-decimal;
+}
+
+.prose strong {
+  @apply font-semibold text-white;
+}
+
+.prose em {
+  @apply italic;
+}
+
+.prose code {
+  @apply bg-gray-800 px-2 py-1 rounded text-sm font-mono border border-gray-600;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-blue-500 pl-4 my-4 italic text-gray-300 bg-gray-800/50 py-2;
+}
+
+.prose a {
+  @apply text-blue-400 hover:text-blue-300 underline;
+}
+
+.prose table {
+  @apply w-full border-collapse my-4;
+}
+
+.prose th, .prose td {
+  @apply border border-gray-600 px-3 py-2;
+}
+
+.prose th {
+  @apply bg-gray-800 font-semibold;
+}
+
+.prose hr {
+  @apply border-gray-600 my-6;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Custom utility classes */
+.bg-gray-750 {
+  background-color: #374151;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .prose {
+    @apply text-sm;
+  }
+  
+  .code-content {
+    @apply text-xs;
+  }
+}
+
+/* Focus styles */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900;
+}
+
+/* Loading animation */
+.loading-dots::after {
+  content: '...';
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0,0,0,0);
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  40% {
+    color: white;
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  60% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  80%, 100% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 white;
+  }
+}
