@@ -36,14 +36,14 @@ export function EmptyState({ onSendMessage }: EmptyStateProps) {
   return (
     <div className="flex-1 flex items-center justify-center p-8">
       <div className="max-w-2xl mx-auto text-center">
-        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-orange-accent flex items-center justify-center">
-          <MessageCircle size={32} className="text-warm-primary" />
+        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+          <MessageCircle size={32} className="text-white" />
         </div>
         
-        <h2 className="text-3xl font-bold text-warm-primary mb-4">
+        <h2 className="text-3xl font-bold text-gray-100 mb-4">
           Welcome to AI Assistant
         </h2>
-        <p className="text-warm-secondary text-lg mb-8">
+        <p className="text-gray-400 text-lg mb-8">
           I'm here to help you with anything you need. Choose a topic below to get started, or type your own message.
         </p>
 
@@ -52,17 +52,17 @@ export function EmptyState({ onSendMessage }: EmptyStateProps) {
             <button
               key={index}
               onClick={() => onSendMessage(suggestion.prompt)}
-              className="p-6 bg-warm-secondary hover:bg-warm-tertiary border border-warm-primary hover:border-orange-accent rounded-xl text-left btn-hover group focus-ring"
+              className="p-6 bg-gray-800 hover:bg-gray-750 border border-gray-700 hover:border-blue-500/50 rounded-xl text-left transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/10 group"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-orange-accent/20 rounded-lg text-orange-accent group-hover:text-orange-light smooth-transition">
+                <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:text-blue-300 transition-colors">
                   {suggestion.icon}
                 </div>
-                <h3 className="font-semibold text-warm-primary">
+                <h3 className="font-semibold text-gray-100">
                   {suggestion.title}
                 </h3>
               </div>
-              <p className="text-warm-muted text-sm">
+              <p className="text-gray-400 text-sm">
                 {suggestion.description}
               </p>
             </button>

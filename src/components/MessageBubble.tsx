@@ -1,5 +1,5 @@
 // React import not required with new JSX transform
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { User, Bot, Edit, RefreshCw } from 'lucide-react';
 import { Message } from '../types';
 import { renderMarkdown, enhanceCodeBlocks } from '../utils/markdown';
@@ -13,8 +13,6 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message, isLast }: MessageBubbleProps) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [displayedContent, setDisplayedContent] = useState('');
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     if (contentRef.current && message.role === 'assistant') {
@@ -23,37 +21,13 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
     }
   }, [message.content]);
 
-  // Streaming text effect for assistant messages
-  useEffect(() => {
-    if (message.role === 'assistant' && message.isStreaming) {
-      setIsAnimating(true);
-      const words = message.content.split(' ');
-      let currentIndex = 0;
-      
-      const interval = setInterval(() => {
-        if (currentIndex < words.length) {
-          setDisplayedContent(words.slice(0, currentIndex + 1).join(' '));
-          currentIndex++;
-        } else {
-          setIsAnimating(false);
-          clearInterval(interval);
-        }
-      }, 50); // Adjust speed as needed
-      
-      return () => clearInterval(interval);
-    } else {
-      setDisplayedContent(message.content);
-      setIsAnimating(false);
-    }
-  }, [message.content, message.isStreaming, message.role]);
-
   // Detect tool-result blocks: fenced blocks starting with ```tool
-  let processed = message.role === 'assistant' ? displayedContent : message.content;
+  let processed = message.role === 'assistant' ? message.content : message.content;
   let mathMap = {} as Record<string, string>;
 
   // If assistant message, extract math placeholders so KaTeX HTML can be injected after markdown
   if (message.role === 'assistant') {
-    const extracted = extractMathPlaceholders(displayedContent);
+    const extracted = extractMathPlaceholders(message.content);
     processed = extracted.text;
     mathMap = extracted.mathMap;
   }
@@ -85,32 +59,32 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
       message.role === 'user' ? 'justify-end' : 'justify-start'
     )}>
       {message.role === 'assistant' && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-orange-accent flex items-center justify-center">
-          <Bot size={18} className="text-warm-primary" />
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+          <Bot size={18} className="text-white" />
         </div>
       )}
       
       <div className={clsx(
-        'max-w-4xl rounded-2xl px-4 py-3 relative message-bubble',
+        'max-w-4xl rounded-2xl px-4 py-3 relative',
         // use `group` so hover styles inside the bubble can be triggered
         'group',
         message.role === 'user' 
-          ? 'bg-orange-accent text-warm-primary ml-12' 
-          : 'bg-warm-secondary text-warm-primary mr-12',
-        isAnimating && 'loading-pulse'
+          ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white ml-12' 
+          : 'bg-gray-800 text-gray-100 mr-12',
+        isLast && message.isStreaming && 'animate-pulse'
       )}>
         <div
           ref={contentRef}
           className={clsx(
-            'prose max-w-none',
+            'prose prose-invert max-w-none',
             message.role === 'user' ? 'whitespace-pre-wrap' : ''
           )}
           dangerouslySetInnerHTML={{ __html: processedContent }}
         />
         {/* Thinking indicator: show when assistant message is streaming but no tokens/output yet */}
-        {message.role === 'assistant' && message.isStreaming && (!displayedContent || displayedContent.trim() === '') && (
+        {message.role === 'assistant' && message.isStreaming && (!message.content || message.content.trim() === '') && (
           <div className="mt-2" aria-live="polite" aria-busy="true">
-            <span className="text-sm text-warm-muted italic">Thinking</span>
+            <span className="text-sm text-gray-300 italic">Thinking</span>
             <span className="sr-only">Assistant is thinking</span>
           </div>
         )}
@@ -122,7 +96,7 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
               <button
                 title="Regenerate"
                 aria-label="Regenerate message"
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-warm-tertiary hover:bg-warm-accent text-warm-primary shadow-sm ring-1 ring-transparent hover:ring-orange-accent smooth-transition focus-ring"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
                 onClick={() => {
                   const ev = new CustomEvent('regenerate-message', { detail: { messageId: message.id } });
                   window.dispatchEvent(ev);
@@ -136,7 +110,7 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
               <button
                 title="Edit"
                 aria-label="Edit message"
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-warm-tertiary hover:bg-warm-accent text-warm-primary shadow-sm ring-1 ring-transparent hover:ring-orange-accent smooth-transition focus-ring"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/30 text-white/90 shadow-sm ring-1 ring-transparent hover:ring-white/10 transition"
                 onClick={() => {
                   const ev = new CustomEvent('edit-message', { detail: { messageId: message.id } });
                   window.dispatchEvent(ev);
@@ -148,14 +122,14 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
           </div>
         )}
         
-        {isLast && isAnimating && (
-          <div className="absolute -bottom-2 -right-2 w-3 h-3 bg-orange-accent rounded-full loading-pulse" />
+        {isLast && message.isStreaming && (
+          <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-blue-500 rounded-full animate-bounce" />
         )}
       </div>
 
       {message.role === 'user' && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-warm-accent flex items-center justify-center">
-          <User size={18} className="text-warm-primary" />
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
+          <User size={18} className="text-white" />
         </div>
       )}
     </div>

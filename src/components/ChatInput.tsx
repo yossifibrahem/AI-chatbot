@@ -56,16 +56,16 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
   };
 
   return (
-    <div className="border-t border-warm-primary bg-warm-secondary p-4">
+    <div className="border-t border-gray-700 bg-gray-900/50 backdrop-blur-md p-4">
       <div className="max-w-4xl mx-auto">
         <div className="space-y-2">
           {editingMessageId && (
-            <div className="text-sm text-orange-light bg-warm-tertiary px-3 py-1 rounded-md border border-warm-secondary">
+            <div className="text-sm text-yellow-300 bg-yellow-900/20 px-3 py-1 rounded-md">
               Editing message — this will delete all messages after it and regenerate the assistant response when submitted.
             </div>
           )}
 
-          <div className="flex items-end gap-3 bg-warm-tertiary rounded-2xl border border-warm-secondary p-3 smooth-transition hover:border-orange-accent">
+          <div className="flex items-end gap-3 bg-gray-800 rounded-2xl border border-gray-600 p-3">
           <textarea
             ref={textareaRef}
             value={message}
@@ -74,14 +74,14 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
             placeholder="Type your message here..."
             rows={1}
             disabled={disabled}
-            className="flex-1 bg-transparent text-warm-primary placeholder-warm-muted resize-none border-none outline-none min-h-[32px] max-h-[200px] focus-ring"
+            className="flex-1 bg-transparent text-gray-100 placeholder-gray-400 resize-none border-none outline-none min-h-[32px] max-h-[200px]"
             style={{ height: '32px' }}
           />
           {/* If editing, show a Cancel button */}
           {editingMessageId && (
             <button
               onClick={() => onCancelEdit && onCancelEdit()}
-              className="mr-2 text-sm text-warm-muted hover:text-warm-primary smooth-transition focus-ring px-2 py-1 rounded"
+              className="mr-2 text-sm text-gray-300 hover:text-white"
             >
               Cancel
             </button>
@@ -92,10 +92,10 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
             className={clsx(
               'flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200',
               isStreaming
-                ? 'bg-error hover:bg-red-700 text-warm-primary hover-lift'
+                ? 'bg-red-600 hover:bg-red-700 text-white'
                 : message.trim()
-                ? 'bg-orange-accent hover:bg-orange-light text-warm-primary shadow-lg hover-lift'
-                : 'bg-warm-accent text-warm-muted cursor-not-allowed',
+                ? 'bg-gradient-to-br from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white shadow-lg'
+                : 'bg-gray-700 text-gray-400 cursor-not-allowed',
               'disabled:opacity-50 disabled:cursor-not-allowed'
             )}
           >
