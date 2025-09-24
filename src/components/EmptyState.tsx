@@ -43,7 +43,7 @@ export function EmptyState({ onSendMessage }: EmptyStateProps) {
         <h2 className="text-4xl font-bold text-stone-800 dark:text-cream-100 mb-6">
           Welcome to AI Assistant
         </h2>
-        <p className="text-amber-700 dark:text-amber-400 text-lg mb-12 leading-relaxed">
+        <p className="text-stone-600 dark:text-amber-400 text-lg mb-12 leading-relaxed">
           I'm here to help you with anything you need. Choose a topic below to get started, or type your own message.
         </p>
 
