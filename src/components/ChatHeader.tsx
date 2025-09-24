@@ -27,7 +27,7 @@ export function ChatHeader({ currentConversation, onToggleSidebar }: ChatHeaderP
             <h1 className="text-xl font-bold text-stone-800 dark:text-cream-100">
               {currentConversation?.name || 'AI Assistant'}
             </h1>
-            <p className="text-sm text-amber-700 dark:text-amber-400">
+            <p className="text-sm text-stone-600 dark:text-amber-400">
               Powered by GPT-OSS
             </p>
           </div>

@@ -92,7 +92,7 @@ export function ConversationSidebar({
                   <h3 className="font-semibold text-stone-800 dark:text-cream-100 truncate">
                     {conversation.name}
                   </h3>
-                  <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
+                  <p className="text-sm text-stone-600 dark:text-amber-400 mt-1">
                     {formatDate(conversation.lastUpdated)}
                   </p>
                 </div>
@@ -113,8 +113,8 @@ export function ConversationSidebar({
           {conversations.length === 0 && (
             <div className="text-center py-12">
               <MessageCircle size={48} className="mx-auto text-amber-400 dark:text-amber-600 mb-4" />
-              <p className="text-amber-700 dark:text-amber-400 font-medium">No conversations yet</p>
-              <p className="text-amber-600 dark:text-amber-500 text-sm mt-2">Start a new chat to begin</p>
+              <p className="text-stone-700 dark:text-amber-400 font-medium">No conversations yet</p>
+              <p className="text-stone-600 dark:text-amber-500 text-sm mt-2">Start a new chat to begin</p>
             </div>
           )}
         </div>
