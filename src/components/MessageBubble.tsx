@@ -68,6 +68,13 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
           )}
           dangerouslySetInnerHTML={{ __html: processedContent }}
         />
+        {/* Thinking indicator: show when assistant message is streaming but no tokens/output yet */}
+        {message.role === 'assistant' && message.isStreaming && (!message.content || message.content.trim() === '') && (
+          <div className="mt-2" aria-live="polite" aria-busy="true">
+            <span className="text-sm text-gray-300 italic">Thinking</span>
+            <span className="sr-only">Assistant is thinking</span>
+          </div>
+        )}
         
         {/* Hover controls placed at bottom-right of the bubble */}
         {(message.role === 'assistant' || message.role === 'user') && (
