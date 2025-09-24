@@ -410,7 +410,7 @@ function App() {
   ];
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex">
+    <div className="h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex">
         <ConversationSidebar
           conversations={chatState.conversations}
           currentConversationId={chatState.currentConversationId}
@@ -430,11 +430,11 @@ function App() {
           onToggleSidebar={toggleSidebar}
         />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-gradient-to-b from-slate-50/5 to-transparent">
           {allMessages.length === 0 ? (
             <EmptyState onSendMessage={handleSendMessage} />
           ) : (
-            <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
+            <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
               {allMessages.map((message, index) => (
                 <MessageBubble
                   key={message.id}
