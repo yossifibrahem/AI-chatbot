@@ -1,61 +1,75 @@
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
-export function renderMath(text: string): string {
+export type MathMap = Record<string, string>;
+
+const FENCED_OR_INLINE_CODE_RE = /```[\s\S]*?```|`[^`]+`/g;
+const DISPLAY_DOLLAR_RE = /\$\$([\s\S]+?)\$\$/g;
+const DISPLAY_BRACKET_RE = /\\\[([\s\S]*?)\\\]/g;
+const INLINE_DOLLAR_RE = /\$([^$\n]+?)\$/g;
+const INLINE_PARENS_RE = /\\\((.*?)\\\)/g;
+
+function makePlaceholder(prefix: string, id: string, n: number) {
+  // include a timestamp component to reduce chance of collisions with user text
+  return `%%${prefix}_${id}_${n}%%`;
+}
+
+/**
+ * Extract math expressions and replace them with placeholders.
+ * Returns the text with placeholders and a map from placeholder -> KaTeX HTML.
+ */
+export function extractMathPlaceholders(text: string): { text: string; mathMap: MathMap } {
   const codeBlocks = new Map<string, string>();
   let counter = 0;
+  const id = Date.now().toString(36);
 
-  // Preserve code blocks
-  text = text.replace(/```[\s\S]*?```|`[^`]+`/g, match => {
-    const placeholder = `%%CODE_BLOCK_${counter}%%`;
+  // Protect fenced code blocks and inline code
+  text = text.replace(FENCED_OR_INLINE_CODE_RE, match => {
+    const placeholder = makePlaceholder('CODE_BLOCK', id, counter);
     codeBlocks.set(placeholder, match);
     counter++;
     return placeholder;
   });
 
-  // Display math ($$...$$)
-  text = text.replace(/\$\$([\s\S]+?)\$\$/g, (_, math) => {
+  const mathMap: MathMap = {};
+  let mathCounter = 0;
+
+  const replaceWithKatex = (math: string, displayMode: boolean) => {
+    const key = makePlaceholder('MATH_BLOCK', id, mathCounter);
+    mathCounter++;
     try {
-      return katex.renderToString(math.trim(), { displayMode: true });
+      mathMap[key] = katex.renderToString(math.trim(), { displayMode });
     } catch (e) {
-      console.error('KaTeX error:', e);
-      return `$$${math}$$`;
+      // Keep original delimiters as a readable fallback
+      // eslint-disable-next-line no-console
+      console.error('KaTeX render error:', e);
+      mathMap[key] = displayMode ? `$$${math}$$` : `$${math}$`;
     }
-  });
+    return key;
+  };
 
-  // Inline math ($...$)
-  text = text.replace(/\$([^$\n]+?)\$/g, (_, math) => {
-    try {
-      return katex.renderToString(math.trim(), { displayMode: false });
-    } catch (e) {
-      console.error('KaTeX error:', e);
-      return `$${math}$`;
-    }
-  });
+  // Replace display and inline math with placeholders
+  text = text.replace(DISPLAY_DOLLAR_RE, (_, math) => replaceWithKatex(math, true));
+  text = text.replace(DISPLAY_BRACKET_RE, (_, math) => replaceWithKatex(math, true));
+  text = text.replace(INLINE_DOLLAR_RE, (_, math) => replaceWithKatex(math, false));
+  text = text.replace(INLINE_PARENS_RE, (_, math) => replaceWithKatex(math, false));
 
-  // LaTeX-style math
-  text = text.replace(/\\\[([\s\S]*?)\\\]/g, (_, math) => {
-    try {
-      return katex.renderToString(math, { displayMode: true });
-    } catch (e) {
-      console.error('KaTeX error:', e);
-      return math;
-    }
-  });
+  // Restore code blocks (use split/join to replace all occurrences)
+  for (const [placeholder, original] of codeBlocks.entries()) {
+    text = text.split(placeholder).join(original);
+  }
 
-  text = text.replace(/\\\((.*?)\\\)/g, (_, math) => {
-    try {
-      return katex.renderToString(math, { displayMode: false });
-    } catch (e) {
-      console.error('KaTeX error:', e);
-      return math;
-    }
-  });
+  return { text, mathMap };
+}
 
-  // Restore code blocks
-  codeBlocks.forEach((value, key) => {
-    text = text.replace(key, value);
-  });
-
-  return text;
+/**
+ * Inject KaTeX HTML back into rendered HTML by replacing placeholders.
+ */
+export function injectMathPlaceholders(html: string, mathMap: MathMap): string {
+  if (!mathMap || Object.keys(mathMap).length === 0) return html;
+  let out = html;
+  for (const key of Object.keys(mathMap)) {
+    out = out.split(key).join(mathMap[key]);
+  }
+  return out;
 }

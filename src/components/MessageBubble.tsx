@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { User, Bot, Edit, RefreshCw } from 'lucide-react';
 import { Message } from '../types';
 import { renderMarkdown, enhanceCodeBlocks } from '../utils/markdown';
-import { renderMath } from '../utils/math';
+import { extractMathPlaceholders, injectMathPlaceholders } from '../utils/math';
 import clsx from 'clsx';
 
 interface MessageBubbleProps {
@@ -22,7 +22,15 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
   }, [message.content]);
 
   // Detect tool-result blocks: fenced blocks starting with ```tool
-  let processed = message.role === 'assistant' ? renderMath(message.content) : message.content;
+  let processed = message.role === 'assistant' ? message.content : message.content;
+  let mathMap = {} as Record<string, string>;
+
+  // If assistant message, extract math placeholders so KaTeX HTML can be injected after markdown
+  if (message.role === 'assistant') {
+    const extracted = extractMathPlaceholders(message.content);
+    processed = extracted.text;
+    mathMap = extracted.mathMap;
+  }
   const toolBlocks: { id: string; raw: string; html: string }[] = [];
   processed = processed.replace(/```tool([\s\S]*?)```/g, (_, inner) => {
     const id = `tool-${Math.random().toString(36).slice(2, 9)}`;
@@ -38,6 +46,11 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
   for (const tb of toolBlocks) {
     const collapsedHtml = `\n<div class=\"tool-collapsible\">\n  <button class=\"tool-toggle\" data-id=\"${tb.id}\">Show tool result</button>\n  <div class=\"tool-body hidden\" data-id=\"${tb.id}\">${tb.html}</div>\n</div>\n`;
     processedContent = processedContent.replace(`%%TOOL_BLOCK_${tb.id}%%`, collapsedHtml);
+  }
+
+  // Inject KaTeX-rendered math back into the HTML so the markdown renderer doesn't escape it.
+  if (message.role === 'assistant') {
+    processedContent = injectMathPlaceholders(processedContent, mathMap);
   }
 
   return (
