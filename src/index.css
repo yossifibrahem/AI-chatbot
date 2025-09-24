@@ -30,10 +30,58 @@
   font-display: swap;
 }
 
-/* Prism.js Theme */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Modern Color Palette - Warm Dark Theme */
+:root {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3d2914;
+  --bg-accent: #5d4037;
+  --text-primary: #f5f5f5;
+  --text-secondary: #d4d4d4;
+  --text-muted: #a8a8a8;
+  --border-primary: #404040;
+  --border-secondary: #5d4037;
+  --orange-accent: #bf5f00;
+  --orange-light: #d4691a;
+  --success: #4ade80;
+  --error: #ef4444;
+  --warning: #f59e0b;
+}
+
+/* Streaming Text Animation */
+@keyframes streamIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.streaming-token {
+  animation: streamIn 0.3s ease-out forwards;
+  display: inline;
+}
+
+/* Smooth Transitions for Interactive Elements */
+.smooth-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
 
 /* KaTeX Styling */
 .katex {
@@ -45,104 +93,230 @@
   text-align: center;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Warm Theme */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(31, 41, 55, 0.5);
-  border-radius: 3px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.6);
-  border-radius: 3px;
+  background: var(--orange-accent);
+  border-radius: 4px;
+  border: 1px solid var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.8);
+  background: var(--orange-light);
 }
 
-/* Legacy code block styles removed to allow simpler/uniform code rendering.
-   Prism theme import at the top still provides syntax colors if needed. */
-
-/* Prose Styling */
+/* Prose Styling - Updated for Warm Theme */
 .prose {
-  @apply text-gray-100;
+  color: var(--text-primary);
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-  @apply text-gray-100 font-semibold mt-6 mb-4;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
 }
 
-.prose h1 { @apply text-3xl; }
-.prose h2 { @apply text-2xl; }
-.prose h3 { @apply text-xl; }
-.prose h4 { @apply text-lg; }
+.prose h1 { font-size: 1.875rem; }
+.prose h2 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.25rem; }
+.prose h4 { font-size: 1.125rem; }
 
 .prose p {
-  @apply mb-4 leading-relaxed;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
 }
 
 .prose ul, .prose ol {
-  @apply mb-4 pl-6;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
 }
 
 .prose li {
-  @apply mb-2;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
 }
 
 .prose ul li {
-  @apply list-disc;
+  list-style-type: disc;
 }
 
 .prose ol li {
-  @apply list-decimal;
+  list-style-type: decimal;
 }
 
 .prose strong {
-  @apply font-semibold text-white;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .prose em {
-  @apply italic;
+  font-style: italic;
 }
 
 .prose code {
-  @apply bg-gray-800 px-2 py-1 rounded text-sm font-mono border border-gray-600;
+  background-color: var(--bg-secondary);
+  color: var(--orange-light);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  border: 1px solid var(--border-primary);
 }
 
 .prose blockquote {
-  @apply border-l-4 border-blue-500 pl-4 my-4 italic text-gray-300 bg-gray-800/50 py-2;
+  border-left: 4px solid var(--orange-accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: var(--text-muted);
+  background-color: rgba(61, 41, 20, 0.3);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 0.375rem 0.375rem 0;
 }
 
 .prose a {
-  @apply text-blue-400 hover:text-blue-300 underline;
+  color: var(--orange-light);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.prose a:hover {
+  color: var(--orange-accent);
 }
 
 .prose table {
-  @apply w-full border-collapse my-4;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
 }
 
 .prose th, .prose td {
-  @apply border border-gray-600 px-3 py-2;
+  border: 1px solid var(--border-primary);
+  padding: 0.75rem;
 }
 
 .prose th {
-  @apply bg-gray-800 font-semibold;
+  background-color: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.prose td {
+  color: var(--text-secondary);
 }
 
 .prose hr {
-  @apply border-gray-600 my-6;
+  border-color: var(--border-primary);
+  margin: 1.5rem 0;
+}
+
+/* Enhanced Code Block UI - Warm Theme */
+.code-block-wrapper {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-primary);
+  background-color: var(--bg-secondary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.code-block-header {
+  background-color: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-secondary);
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code-block-header .font-mono {
+  color: var(--orange-light);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.code-block-header button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.code-block-header button:hover {
+  color: var(--text-primary);
+  background-color: rgba(191, 95, 0, 0.1);
+}
+
+.code-block-header button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--orange-accent);
+}
+
+.code-block-header svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.code-block-wrapper pre {
+  background: transparent !important;
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  max-height: 16rem;
+}
+
+.code-block-wrapper code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  white-space: pre;
+  color: inherit !important;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.code-block-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-block-wrapper pre {
+  scrollbar-color: var(--orange-accent) transparent;
+}
+
+/* Override prose code styles within code blocks */
+.prose .code-block-wrapper code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit !important;
 }
 
 /* Animation keyframes */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -150,83 +324,130 @@
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
 .animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Custom utility classes */
-.bg-gray-750 {
-  background-color: #374151;
+/* Custom utility classes for warm theme */
+.bg-warm-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-warm-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-warm-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.bg-warm-accent {
+  background-color: var(--bg-accent);
+}
+
+.text-warm-primary {
+  color: var(--text-primary);
+}
+
+.text-warm-secondary {
+  color: var(--text-secondary);
+}
+
+.text-warm-muted {
+  color: var(--text-muted);
+}
+
+.border-warm-primary {
+  border-color: var(--border-primary);
+}
+
+.border-warm-secondary {
+  border-color: var(--border-secondary);
+}
+
+.text-orange-accent {
+  color: var(--orange-accent);
+}
+
+.text-orange-light {
+  color: var(--orange-light);
+}
+
+.bg-orange-accent {
+  background-color: var(--orange-accent);
+}
+
+.bg-orange-light {
+  background-color: var(--orange-light);
+}
+
+/* Focus styles for accessibility */
+.focus-ring {
+  transition: box-shadow 0.2s ease;
+}
+
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(191, 95, 0, 0.3);
 }
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .prose {
-    @apply text-sm;
+    font-size: 0.875rem;
   }
   
-  /* Removed responsive sizing for legacy code blocks */
-}
-
-/* Focus styles */
-.focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900;
-}
-
-/* Loading animation */
-.loading-dots::after {
-  content: '...';
-  animation: dots 1.5s steps(5, end) infinite;
-}
-
-@keyframes dots {
-  0%, 20% {
-    color: rgba(0,0,0,0);
-    text-shadow:
-      .25em 0 0 rgba(0,0,0,0),
-      .5em 0 0 rgba(0,0,0,0);
+  .code-block-wrapper pre {
+    padding: 0.75rem;
+    font-size: 0.8rem;
   }
-  40% {
-    color: white;
-    text-shadow:
-      .25em 0 0 rgba(0,0,0,0),
-      .5em 0 0 rgba(0,0,0,0);
-  }
-  60% {
-    text-shadow:
-      .25em 0 0 white,
-      .5em 0 0 rgba(0,0,0,0);
-  }
-  80%, 100% {
-    text-shadow:
-      .25em 0 0 white,
-      .5em 0 0 white;
+  
+  .code-block-header {
+    padding: 0.375rem 0.5rem;
   }
 }
 
-/* Enhanced code block UI */
+/* Loading animation - removed blinking, added subtle pulse */
+.loading-pulse {
+  animation: subtlePulse 2s ease-in-out infinite;
+}
 
-/* Enhanced code block UI */
-.code-block-wrapper { box-shadow: 0 2px 8px rgba(2,6,23,0.6); }
-.code-block-wrapper .code-block-header svg { display: inline-block; vertical-align: middle; }
-.code-block-header button { background: transparent; border: none; cursor: pointer; }
-.code-block-header button:focus { outline: none; }
-.code-block-wrapper pre { background: transparent !important; }
-.code-block-wrapper code { background: transparent !important; border: none !important; padding: 0 !important; white-space: pre; color: inherit !important; }
-.code-block-wrapper::-webkit-scrollbar { height: 8px; }
-.code-block-wrapper pre { scrollbar-color: rgba(59,130,246,0.6) transparent; }
+@keyframes subtlePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
 
-/* If code blocks are inside .prose, the .prose code rule may apply; override it here */
-.prose .code-block-wrapper code { background: transparent !important; border: none !important; padding: 0 !important; }
+/* Button hover effects */
+.btn-hover {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-/* Make language label visually distinct */
-.code-block-header .font-mono { color: #cbd5e1; font-weight: 600; }
+.btn-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Message bubble enhancements */
+.message-bubble {
+  transition: all 0.2s ease;
+  border-radius: 1rem;
+}
+
+.message-bubble:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Sidebar enhancements */
+.sidebar-item {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.75rem;
+}
+
+.sidebar-item:hover {
+  transform: translateX(2px);
+  background-color: var(--bg-secondary);
+}
