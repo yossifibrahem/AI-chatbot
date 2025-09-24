@@ -85,9 +85,9 @@ function App() {
 
     setStreamingMessage(assistantMessage);
 
+    // Accumulate tokens locally so the final message contains the full content
+    let accumulated = '';
     try {
-      // Accumulate tokens locally so the final message contains the full content
-      let accumulated = '';
       await streamChatCompletion({
         messages: messagesForApi,
         signal: abortControllerRef.current?.signal ?? undefined,
@@ -107,7 +107,23 @@ function App() {
       setStreamingMessage(null);
       return finalMessage;
     } catch (e) {
+      // If the stream was aborted by the user but we already received some tokens,
+      // preserve the partial content as a final assistant message instead of discarding it.
+  const isAbort = (e as any)?.name === 'AbortError' || (e as any)?.message?.toLowerCase()?.includes('abort');
+  // Use the accumulated content that we collected while streaming
+  const partial = accumulated || '';
       setStreamingMessage(null);
+
+      if (isAbort && partial && partial.trim() !== '') {
+        const finalMessage: Message = {
+          ...assistantMessage,
+          content: partial,
+          isStreaming: false
+        };
+        return finalMessage;
+      }
+
+      // Nothing to preserve, rethrow so callers can handle fallback logic
       throw e;
     }
   };
@@ -283,7 +299,6 @@ function App() {
       } catch (e) {
         const isAbort = (e as any)?.name === 'AbortError' || (e as any)?.message?.toLowerCase().includes('abort');
         if (isAbort) {
-          console.log('Regenerate aborted by user');
           setChatState(prev => ({ ...prev, isStreaming: false }));
           // clear controller
           abortControllerRef.current = null;
