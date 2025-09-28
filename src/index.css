@@ -307,25 +307,13 @@
   position: relative;
 }
 
-.chat-input-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 24px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(20, 184, 166, 0.2));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* Messages area helper: add bottom padding so last messages aren't hidden
+   when the input is absolutely positioned. Match pb-24 used in App.tsx */
+.chat-messages-area {
+  padding-bottom: 6rem; /* 24 (tailwind) -> 6rem */
 }
 
-.chat-input-container:focus-within::before {
-  opacity: 1;
-}
+
 
 /* Enhanced send button animation */
 @keyframes sendPulse {
@@ -359,9 +347,9 @@
   bottom: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(20, 184, 166, 0.1));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
+  /* subtle outline instead of gradient overlay */
+  background: rgba(59, 130, 246, 0.06);
+  border: 1px solid rgba(59, 130, 246, 0.08);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -398,3 +386,21 @@
     opacity: 1;
   }
 }
+
+/* Thinking dots used in the MessageBubble thinking indicator */
+.thinking-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.thinking-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #6b7280; /* gray-500 */
+  animation: typing 1.2s infinite ease-in-out;
+}
+
+.thinking-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+.thinking-dots .dot:nth-child(2) { animation-delay: -0.16s; }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Settings, Server, Key, Brain, Save, RotateCcw } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -145,7 +145,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 'flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200',
                 saved
                   ? 'bg-green-600 text-white'
-                  : 'bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
               )}
             >
               <Save size={16} />

@@ -99,7 +99,7 @@ export function ConversationSidebar({
         <div className="p-4">
           <button
             onClick={onNewConversation}
-            className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 rounded-xl text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="w-full flex items-center gap-3 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             <Plus size={20} />
             New Conversation
@@ -152,7 +152,13 @@ export function ConversationSidebar({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onDeleteConversation(conversation.id);
+                          const name = conversation.name || 'this conversation';
+                          const confirmed = window.confirm(
+                            `Delete conversation "${name}"? This action cannot be undone.`
+                          );
+                          if (confirmed) {
+                            onDeleteConversation(conversation.id);
+                          }
                         }}
                         className="opacity-0 group-hover:opacity-100 ml-2 p-1 text-gray-400 hover:text-red-400 transition-all duration-200"
                       >

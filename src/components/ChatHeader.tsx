@@ -25,7 +25,7 @@ export function ChatHeader({ currentConversation, onToggleSidebar }: ChatHeaderP
         </button>
         
         <div className="flex items-center gap-3 flex-1 lg:justify-center">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
             <Bot size={18} className="text-white" />
           </div>
           <div>

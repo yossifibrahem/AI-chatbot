@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Download, FileText, Copy, Check } from 'lucide-react';
 import { Conversation } from '../types';
 import clsx from 'clsx';
@@ -105,8 +105,8 @@ export function ExportModal({ isOpen, onClose, conversation }: ExportModalProps)
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-gray-900 rounded-2xl border border-gray-700 w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between p-6 border-b border-gray-700">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+            <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-green-200/20 flex items-center justify-center">
               <Download size={18} className="text-green-400" />
             </div>
             <h2 className="text-xl font-semibold text-gray-100">Export Conversation</h2>
@@ -173,7 +173,7 @@ export function ExportModal({ isOpen, onClose, conversation }: ExportModalProps)
             </button>
             <button
               onClick={handleDownload}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-medium transition-all duration-200"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200"
             >
               <Download size={16} />
               Download {format.toUpperCase()}

@@ -410,7 +410,7 @@ function App() {
   ];
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex">
+  <div className="h-screen bg-gray-900 flex">
         <ConversationSidebar
           conversations={chatState.conversations}
           currentConversationId={chatState.currentConversationId}
@@ -422,7 +422,7 @@ function App() {
         />
 
       <div className={clsx(
-        'flex-1 flex flex-col min-w-0 transition-all duration-300',
+        'flex-1 flex flex-col min-w-0 transition-all duration-300 relative',
         chatState.sidebarOpen && 'lg:ml-0'
       )}>
         <ChatHeader
@@ -430,7 +430,7 @@ function App() {
           onToggleSidebar={toggleSidebar}
         />
 
-        <div className="flex-1 overflow-y-auto">
+  <div className="flex-1 overflow-y-auto pb-24 chat-messages-area">
           {allMessages.length === 0 ? (
             <EmptyState onSendMessage={handleSendMessage} />
           ) : (
@@ -447,7 +447,8 @@ function App() {
           )}
         </div>
 
-        <ChatInput
+        <div className="absolute left-0 right-0 bottom-0 z-20">
+          <ChatInput
           onSendMessage={handleSendMessage}
           onStopGeneration={handleStopGeneration}
           isStreaming={chatState.isStreaming}
@@ -455,7 +456,8 @@ function App() {
           initialText={editingInitialText}
           onCancelEdit={handleCancelEdit}
           onUpdateMessage={handleUpdateMessage}
-        />
+          />
+        </div>
       </div>
     </div>
   );

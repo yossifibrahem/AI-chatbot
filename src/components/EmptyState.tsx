@@ -1,4 +1,3 @@
-import React from 'react';
 import { MessageCircle, Sparkles, Code, Calculator, BookOpen, Lightbulb } from 'lucide-react';
 
 interface EmptyStateProps {
@@ -48,7 +47,7 @@ export function EmptyState({ onSendMessage }: EmptyStateProps) {
   return (
     <div className="flex-1 flex items-center justify-center p-8">
       <div className="max-w-2xl mx-auto text-center">
-        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-500 flex items-center justify-center">
           <MessageCircle size={32} className="text-white" />
         </div>
         
