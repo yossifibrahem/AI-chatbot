@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { User, Bot, Edit, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { User, Bot, CreditCard as Edit, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Message } from '../types';
 import { renderMarkdown, enhanceCodeBlocks } from '../utils/markdown';
 import { extractMathPlaceholders, injectMathPlaceholders } from '../utils/math';
