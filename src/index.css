@@ -130,15 +130,15 @@ body {
 }
 
 .prose code {
-  @apply bg-stone-100 dark:bg-stone-700 px-2 py-1 rounded text-sm font-mono border border-stone-200 dark:border-amber-700 text-stone-800 dark:text-amber-200;
+  @apply bg-amber-100 dark:bg-stone-700 px-2 py-1 rounded text-sm font-mono border border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-200;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-amber-500 pl-4 my-4 italic text-stone-700 dark:text-amber-300 bg-stone-50 dark:bg-stone-800/50 py-3;
+  @apply border-l-4 border-amber-500 pl-4 my-4 italic text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-stone-800/50 py-3;
 }
 
 .prose a {
-  @apply text-amber-800 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-300 underline;
+  @apply text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 underline;
 }
 
 .prose table {
@@ -146,11 +146,11 @@ body {
 }
 
 .prose th, .prose td {
-  @apply border border-stone-200 dark:border-amber-700 px-3 py-2;
+  @apply border border-amber-200 dark:border-amber-700 px-3 py-2;
 }
 
 .prose th {
-  @apply bg-stone-100 dark:bg-stone-700 font-bold;
+  @apply bg-amber-100 dark:bg-stone-700 font-bold;
 }
 
 .prose hr {

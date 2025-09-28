@@ -84,7 +84,7 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
         {/* Thinking indicator: show when assistant message is streaming but no tokens/output yet */}
         {message.role === 'assistant' && message.isStreaming && (!message.content || message.content.trim() === '') && (
           <div className="mt-3" aria-live="polite" aria-busy="true">
-            <span className="text-sm text-stone-600 dark:text-amber-400 italic font-medium">Thinking</span>
+            <span className="text-sm text-amber-600 dark:text-amber-400 italic font-medium">Thinking</span>
             <span className="sr-only">Assistant is thinking</span>
           </div>
         )}

@@ -60,7 +60,7 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
       <div className="max-w-4xl mx-auto">
         <div className="space-y-2">
           {editingMessageId && (
-            <div className="text-sm text-stone-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-900/30 px-4 py-2 rounded-lg border border-amber-200 dark:border-amber-700">
+            <div className="text-sm text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/30 px-4 py-2 rounded-lg border border-amber-200 dark:border-amber-700">
               Editing message — this will delete all messages after it and regenerate the assistant response when submitted.
             </div>
           )}
@@ -74,14 +74,14 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
             placeholder="Type your message here..."
             rows={1}
             disabled={disabled}
-            className="flex-1 bg-transparent text-stone-800 dark:text-cream-100 placeholder-stone-500 dark:placeholder-amber-400 resize-none border-none outline-none min-h-[32px] max-h-[200px] font-serif"
+            className="flex-1 bg-transparent text-stone-800 dark:text-cream-100 placeholder-amber-600 dark:placeholder-amber-400 resize-none border-none outline-none min-h-[32px] max-h-[200px] font-serif"
             style={{ height: '32px' }}
           />
           {/* If editing, show a Cancel button */}
           {editingMessageId && (
             <button
               onClick={() => onCancelEdit && onCancelEdit()}
-              className="mr-2 text-sm text-stone-600 dark:text-amber-400 hover:text-stone-800 dark:hover:text-amber-200 font-medium"
+              className="mr-2 text-sm text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 font-medium"
             >
               Cancel
             </button>
@@ -95,7 +95,7 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
                 ? 'bg-red-600 hover:bg-red-700 text-cream-50'
                 : message.trim()
                 ? 'bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-cream-50 shadow-md hover:shadow-lg'
-                : 'bg-stone-300 dark:bg-stone-600 text-stone-500 dark:text-stone-400 cursor-not-allowed',
+                : 'bg-amber-300 dark:bg-stone-600 text-amber-600 dark:text-stone-400 cursor-not-allowed',
               'disabled:opacity-50 disabled:cursor-not-allowed'
             )}
           >
