@@ -1,5 +1,5 @@
 import React, { useState, useRef, KeyboardEvent, useEffect } from 'react';
-import { Send, Square, Paperclip, Mic, MicOff } from 'lucide-react';
+import { Send, Square, Mic, MicOff } from 'lucide-react';
 import clsx from 'clsx';
 
 interface ChatInputProps {
@@ -90,79 +90,75 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
     }
   };
   return (
-    <div className="border-t border-gray-700 bg-gray-900/50 backdrop-blur-md p-4">
+    <div className="border-t border-gray-700 bg-gray-900/80 backdrop-blur-xl p-6">
       <div className="max-w-4xl mx-auto">
         <div className="space-y-2">
           {editingMessageId && (
-            <div className="text-sm text-yellow-300 bg-yellow-900/20 px-3 py-1 rounded-md">
+            <div className="text-sm text-yellow-300 bg-yellow-900/20 px-4 py-2 rounded-xl border border-yellow-700/30">
               Editing message — this will delete all messages after it and regenerate the assistant response when submitted.
             </div>
           )}
 
-          <div className="flex items-end gap-3 bg-gray-800 rounded-2xl border border-gray-600 p-3">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="text-gray-400 hover:text-gray-200 transition-colors p-1"
-                title="Attach file (coming soon)"
-                disabled
-              >
-                <Paperclip size={18} />
-              </button>
+          <div className="relative">
+            <div className="flex items-end gap-4 bg-gray-800/90 backdrop-blur-sm rounded-3xl border border-gray-600/50 p-4 shadow-2xl">
               {recognitionRef.current && (
                 <button
                   type="button"
                   onClick={toggleVoiceInput}
                   className={clsx(
-                    'transition-colors p-1',
+                    'flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-200 border',
                     isListening 
-                      ? 'text-red-400 hover:text-red-300' 
-                      : 'text-gray-400 hover:text-gray-200'
+                      ? 'bg-red-500/20 border-red-500/50 text-red-400 hover:bg-red-500/30 animate-pulse' 
+                      : 'bg-gray-700/50 border-gray-600/50 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300'
                   )}
                   title={isListening ? 'Stop voice input' : 'Start voice input'}
                 >
                   {isListening ? <MicOff size={18} /> : <Mic size={18} />}
                 </button>
               )}
+            
+              <div className="flex-1 relative">
+                <textarea
+                  ref={textareaRef}
+                  value={message}
+                  onChange={handleTextareaChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder={isListening ? "Listening..." : "Type your message here..."}
+                  rows={1}
+                  disabled={disabled}
+                  className="w-full bg-transparent text-gray-100 placeholder-gray-400 resize-none border-none outline-none min-h-[40px] max-h-[200px] text-base leading-relaxed"
+                  style={{ height: '40px' }}
+                />
+              </div>
+            
+              <div className="flex items-center gap-3">
+                {/* If editing, show a Cancel button */}
+                {editingMessageId && (
+                  <button
+                    onClick={() => onCancelEdit && onCancelEdit()}
+                    className="px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-xl transition-all duration-200"
+                  >
+                    Cancel
+                  </button>
+                )}
+                <button
+                  onClick={isStreaming ? onStopGeneration : handleSubmit}
+                  disabled={(!message.trim() && !isStreaming) || disabled}
+                  className={clsx(
+                    'flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 shadow-lg',
+                    isStreaming
+                      ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/25'
+                      : message.trim()
+                      ? 'bg-gradient-to-br from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105'
+                      : 'bg-gray-700 text-gray-500 cursor-not-allowed',
+                    'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
+                  )}
+                >
+                  {isStreaming ? <Square size={20} /> : <Send size={20} />}
+                </button>
+              </div>
             </div>
-            
-            <textarea
-              ref={textareaRef}
-              value={message}
-              onChange={handleTextareaChange}
-              onKeyDown={handleKeyDown}
-              placeholder={isListening ? "Listening..." : "Type your message here..."}
-              rows={1}
-              disabled={disabled}
-              className="flex-1 bg-transparent text-gray-100 placeholder-gray-400 resize-none border-none outline-none min-h-[32px] max-h-[200px]"
-              style={{ height: '32px' }}
-            />
-            
-          {/* If editing, show a Cancel button */}
-          {editingMessageId && (
-            <button
-              onClick={() => onCancelEdit && onCancelEdit()}
-              className="mr-2 text-sm text-gray-300 hover:text-white"
-            >
-              Cancel
-            </button>
-          )}
-          <button
-            onClick={isStreaming ? onStopGeneration : handleSubmit}
-            disabled={(!message.trim() && !isStreaming) || disabled}
-            className={clsx(
-              'flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200',
-              isStreaming
-                ? 'bg-red-600 hover:bg-red-700 text-white'
-                : message.trim()
-                ? 'bg-gradient-to-br from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white shadow-lg'
-                : 'bg-gray-700 text-gray-400 cursor-not-allowed',
-              'disabled:opacity-50 disabled:cursor-not-allowed'
-            )}
-          >
-            {isStreaming ? <Square size={18} /> : <Send size={18} />}
-          </button>
-        </div>
+          </div>
         </div>
       </div>
     </div>
