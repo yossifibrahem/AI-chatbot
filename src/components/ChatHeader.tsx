@@ -35,6 +35,7 @@ export function ChatHeader({ currentConversation, onToggleSidebar }: ChatHeaderP
             <p className="text-sm text-gray-400">
               Powered by GPT-OSS
             </p>
+          </div>
           <div className="flex items-center gap-2">
             {currentConversation && (
               <button
