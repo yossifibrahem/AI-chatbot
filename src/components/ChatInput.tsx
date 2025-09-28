@@ -1,5 +1,5 @@
 import React, { useState, useRef, KeyboardEvent, useEffect } from 'react';
-import { Send, Square } from 'lucide-react';
+import { Send, Square, Paperclip, Mic, MicOff } from 'lucide-react';
 import clsx from 'clsx';
 
 interface ChatInputProps {
@@ -16,7 +16,9 @@ interface ChatInputProps {
 
 export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabled, editingMessageId, initialText, onCancelEdit, onUpdateMessage }: ChatInputProps) {
   const [message, setMessage] = useState(initialText ?? '');
+  const [isListening, setIsListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   // Keep initialText in sync when editingMessageId changes
   useEffect(() => {
@@ -24,6 +26,27 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
     if (textareaRef.current) textareaRef.current.style.height = '56px';
   }, [initialText, editingMessageId]);
 
+  // Initialize speech recognition
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      
+      recognitionRef.current.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setMessage(prev => prev + transcript);
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
   const handleSubmit = () => {
     const trimmedMessage = message.trim();
     if (!trimmedMessage || isStreaming || disabled) return;
@@ -55,6 +78,17 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
     textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
   };
 
+  const toggleVoiceInput = () => {
+    if (!recognitionRef.current) return;
+    
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
   return (
     <div className="border-t border-gray-700 bg-gray-900/50 backdrop-blur-md p-4">
       <div className="max-w-4xl mx-auto">
@@ -66,17 +100,44 @@ export function ChatInput({ onSendMessage, onStopGeneration, isStreaming, disabl
           )}
 
           <div className="flex items-end gap-3 bg-gray-800 rounded-2xl border border-gray-600 p-3">
-          <textarea
-            ref={textareaRef}
-            value={message}
-            onChange={handleTextareaChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your message here..."
-            rows={1}
-            disabled={disabled}
-            className="flex-1 bg-transparent text-gray-100 placeholder-gray-400 resize-none border-none outline-none min-h-[32px] max-h-[200px]"
-            style={{ height: '32px' }}
-          />
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="text-gray-400 hover:text-gray-200 transition-colors p-1"
+                title="Attach file (coming soon)"
+                disabled
+              >
+                <Paperclip size={18} />
+              </button>
+              {recognitionRef.current && (
+                <button
+                  type="button"
+                  onClick={toggleVoiceInput}
+                  className={clsx(
+                    'transition-colors p-1',
+                    isListening 
+                      ? 'text-red-400 hover:text-red-300' 
+                      : 'text-gray-400 hover:text-gray-200'
+                  )}
+                  title={isListening ? 'Stop voice input' : 'Start voice input'}
+                >
+                  {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+                </button>
+              )}
+            </div>
+            
+            <textarea
+              ref={textareaRef}
+              value={message}
+              onChange={handleTextareaChange}
+              onKeyDown={handleKeyDown}
+              placeholder={isListening ? "Listening..." : "Type your message here..."}
+              rows={1}
+              disabled={disabled}
+              className="flex-1 bg-transparent text-gray-100 placeholder-gray-400 resize-none border-none outline-none min-h-[32px] max-h-[200px]"
+              style={{ height: '32px' }}
+            />
+            
           {/* If editing, show a Cancel button */}
           {editingMessageId && (
             <button

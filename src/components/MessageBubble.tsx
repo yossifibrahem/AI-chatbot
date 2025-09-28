@@ -1,6 +1,5 @@
-// React import not required with new JSX transform
-import { useEffect, useRef } from 'react';
-import { User, Bot, Edit, RefreshCw } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { User, Bot, Edit, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Message } from '../types';
 import { renderMarkdown, enhanceCodeBlocks } from '../utils/markdown';
 import { extractMathPlaceholders, injectMathPlaceholders } from '../utils/math';
@@ -13,6 +12,7 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message, isLast }: MessageBubbleProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
 
   useEffect(() => {
     if (contentRef.current && message.role === 'assistant') {
@@ -21,6 +21,11 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
     }
   }, [message.content]);
 
+  const handleFeedback = (type: 'up' | 'down') => {
+    setFeedback(feedback === type ? null : type);
+    // Here you could send feedback to your analytics service
+    console.log(`Feedback for message ${message.id}: ${type}`);
+  };
   // Detect tool-result blocks: fenced blocks starting with ```tool
   let processed = message.role === 'assistant' ? message.content : message.content;
   let mathMap = {} as Record<string, string>;
@@ -91,7 +96,38 @@ export function MessageBubble({ message, isLast }: MessageBubbleProps) {
         
         {/* Hover controls placed at bottom-right of the bubble */}
         {(message.role === 'assistant' || message.role === 'user') && (
-          <div className="absolute -bottom-4 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex gap-2 pointer-events-auto">
+          <div className="absolute -bottom-4 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex gap-1 pointer-events-auto">
+            {message.role === 'assistant' && (
+              <>
+                <button
+                  title="Good response"
+                  aria-label="Good response"
+                  className={clsx(
+                    'w-8 h-8 flex items-center justify-center rounded-full shadow-sm ring-1 ring-transparent transition',
+                    feedback === 'up'
+                      ? 'bg-green-600 text-white ring-green-500'
+                      : 'bg-black/20 hover:bg-black/30 text-white/90 hover:ring-white/10'
+                  )}
+                  onClick={() => handleFeedback('up')}
+                >
+                  <ThumbsUp size={14} />
+                </button>
+                <button
+                  title="Poor response"
+                  aria-label="Poor response"
+                  className={clsx(
+                    'w-8 h-8 flex items-center justify-center rounded-full shadow-sm ring-1 ring-transparent transition',
+                    feedback === 'down'
+                      ? 'bg-red-600 text-white ring-red-500'
+                      : 'bg-black/20 hover:bg-black/30 text-white/90 hover:ring-white/10'
+                  )}
+                  onClick={() => handleFeedback('down')}
+                >
+                  <ThumbsDown size={14} />
+                </button>
+              </>
+            )}
+            
             {message.role === 'assistant' && (
               <button
                 title="Regenerate"

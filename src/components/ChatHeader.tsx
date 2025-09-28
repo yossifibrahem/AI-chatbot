@@ -1,6 +1,8 @@
-// React import not required with new JSX transform
-import { Menu, Bot } from 'lucide-react';
+import { Menu, Bot, Settings, Download } from 'lucide-react';
 import { Conversation } from '../types';
+import { useState } from 'react';
+import { SettingsModal } from './SettingsModal';
+import { ExportModal } from './ExportModal';
 
 interface ChatHeaderProps {
   currentConversation: Conversation | null;
@@ -8,8 +10,12 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({ currentConversation, onToggleSidebar }: ChatHeaderProps) {
+  const [showSettings, setShowSettings] = useState(false);
+  const [showExport, setShowExport] = useState(false);
+
   return (
-    <div className="border-b border-gray-700 bg-gray-900/50 backdrop-blur-md">
+    <>
+      <div className="border-b border-gray-700 bg-gray-900/50 backdrop-blur-md">
       <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
         <button
           onClick={onToggleSidebar}
@@ -29,11 +35,40 @@ export function ChatHeader({ currentConversation, onToggleSidebar }: ChatHeaderP
             <p className="text-sm text-gray-400">
               Powered by GPT-OSS
             </p>
+          <div className="flex items-center gap-2">
+            {currentConversation && (
+              <button
+                onClick={() => setShowExport(true)}
+                className="p-2 text-gray-400 hover:text-gray-200 transition-colors rounded-lg hover:bg-gray-800"
+                title="Export conversation"
+              >
+                <Download size={18} />
+              </button>
+            )}
+            <button
+              onClick={() => setShowSettings(true)}
+              className="p-2 text-gray-400 hover:text-gray-200 transition-colors rounded-lg hover:bg-gray-800"
+              title="Settings"
+            >
+              <Settings size={18} />
+            </button>
           </div>
         </div>
         
         <div className="flex items-center gap-2" />
       </div>
-    </div>
+      </div>
+
+      <SettingsModal 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
+      
+      <ExportModal 
+        isOpen={showExport} 
+        onClose={() => setShowExport(false)}
+        conversation={currentConversation}
+      />
+    </>
   );
 }

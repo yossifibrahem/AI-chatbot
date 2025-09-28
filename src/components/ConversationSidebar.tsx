@@ -1,7 +1,8 @@
 import React from 'react';
-import { Plus, MessageCircle, Trash2, X } from 'lucide-react';
+import { Plus, MessageCircle, Trash2, X, Search, Archive } from 'lucide-react';
 import { Conversation } from '../types';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 interface ConversationSidebarProps {
   conversations: Conversation[];
@@ -22,6 +23,8 @@ export function ConversationSidebar({
   onSelectConversation,
   onDeleteConversation
 }: ConversationSidebarProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+
   const formatDate = (date: Date) => {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
@@ -33,6 +36,34 @@ export function ConversationSidebar({
     return date.toLocaleDateString();
   };
 
+  const filteredConversations = conversations.filter(conv =>
+    conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    conv.messages.some(msg => 
+      msg.content.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const groupedConversations = filteredConversations.reduce((groups, conv) => {
+    const date = new Date(conv.lastUpdated);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    let group = 'Older';
+    if (date.toDateString() === today.toDateString()) {
+      group = 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      group = 'Yesterday';
+    } else if (date > weekAgo) {
+      group = 'This Week';
+    }
+
+    if (!groups[group]) groups[group] = [];
+    groups[group].push(conv);
+    return groups;
+  }, {} as Record<string, Conversation[]>);
   return (
     <>
       {/* Backdrop */}
@@ -74,27 +105,84 @@ export function ConversationSidebar({
           </button>
         </div>
 
+        {/* Search */}
+        <div className="px-4 pb-4">
+          <div className="relative">
+            <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search conversations..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
         {/* Conversations List */}
         <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2">
-          {conversations.map((conversation) => (
-            <div
-              key={conversation.id}
-              className={clsx(
-                'group relative p-3 rounded-xl cursor-pointer transition-all duration-200',
-                currentConversationId === conversation.id
-                  ? 'bg-blue-600/20 border border-blue-500/30'
-                  : 'hover:bg-gray-800 border border-transparent'
-              )}
-              onClick={() => onSelectConversation(conversation.id)}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-100 truncate">
-                    {conversation.name}
-                  </h3>
-                  <p className="text-sm text-gray-400 mt-1">
-                    {formatDate(conversation.lastUpdated)}
-                  </p>
+          {Object.entries(groupedConversations).map(([group, convs]) => (
+            <div key={group}>
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
+                {group}
+              </h3>
+              <div className="space-y-2">
+                {convs.map((conversation) => (
+                  <div
+                    key={conversation.id}
+                    className={clsx(
+                      'group relative p-3 rounded-xl cursor-pointer transition-all duration-200',
+                      currentConversationId === conversation.id
+                        ? 'bg-blue-600/20 border border-blue-500/30'
+                        : 'hover:bg-gray-800 border border-transparent'
+                    )}
+                    onClick={() => onSelectConversation(conversation.id)}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-100 truncate">
+                          {conversation.name}
+                        </h3>
+                        <p className="text-sm text-gray-400 mt-1">
+                          {conversation.messages.length} messages • {formatDate(conversation.lastUpdated)}
+                        </p>
+                      </div>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteConversation(conversation.id);
+                        }}
+                        className="opacity-0 group-hover:opacity-100 ml-2 p-1 text-gray-400 hover:text-red-400 transition-all duration-200"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          
+          {searchQuery && filteredConversations.length === 0 && (
+            <div className="text-center py-8">
+              <Search size={48} className="mx-auto text-gray-600 mb-4" />
+              <p className="text-gray-400">No conversations found</p>
+              <p className="text-gray-500 text-sm mt-2">Try a different search term</p>
+            </div>
+          )}
+          
+          {!searchQuery && conversations.length === 0 && (
+            <div className="text-center py-8">
+              <MessageCircle size={48} className="mx-auto text-gray-600 mb-4" />
+              <p className="text-gray-400">No conversations yet</p>
+              <p className="text-gray-500 text-sm mt-2">Start a new chat to begin</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
                 </div>
                 
                 <button

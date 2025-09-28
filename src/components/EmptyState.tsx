@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle, Sparkles, Code, Calculator } from 'lucide-react';
+import { MessageCircle, Sparkles, Code, Calculator, BookOpen, Lightbulb } from 'lucide-react';
 
 interface EmptyStateProps {
   onSendMessage: (message: string) => void;
@@ -30,6 +30,18 @@ export function EmptyState({ onSendMessage }: EmptyStateProps) {
       title: 'Creative Writing',
       description: 'Generate stories, poems, and content',
       prompt: 'Write a short story about AI and humans'
+    },
+    {
+      icon: <BookOpen size={20} />,
+      title: 'Learning & Education',
+      description: 'Explain concepts and help with studying',
+      prompt: 'Explain quantum physics in simple terms'
+    },
+    {
+      icon: <Lightbulb size={20} />,
+      title: 'Problem Solving',
+      description: 'Brainstorm solutions and ideas',
+      prompt: 'Help me brainstorm ideas for a mobile app'
     }
   ];
 
@@ -47,7 +59,7 @@ export function EmptyState({ onSendMessage }: EmptyStateProps) {
           I'm here to help you with anything you need. Choose a topic below to get started, or type your own message.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}
